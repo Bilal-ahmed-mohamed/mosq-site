@@ -30,48 +30,42 @@ const getAllDarsas = async (req,res) => {
 const createDarsas = async (req,res) => {
  
       
-
-    try {
-        const upload = await cloudinary.uploader.upload(req.file.path, { folder: "Darsas" });
-        let newDarsa = {
-            title :  req.body.title,
-            category : req.body.category,
-            Audio : upload.secure_url,
-            
-        }
+    // const result = await cloudinary.uploader.upload(req.file.path , {folder : "Darsas"});
+    const result = await cloudinary.uploader.upload(req.file.path, {folder: "Darsas"})
+    
+    let newDarsa = {
+        title :  req.body.title,
+        category : req.body.category,
+        audio : result.secure_url,
         
+    }
     if (!newDarsa) {
         return res.status(400).json({
             success : false,
             message : 'All fields must be filled'
         });   
     }
-    try {
-        const Darsa = await Darsas.create(newDarsa);
-        res.status(200).json({
-            success : true,
-            message : 'new darsa added',
-            Darsa,
-        });
-    } catch (error) {
-        res.status(500).json({
-            success : false,
-            message : "All fields must be requird",
-        })
-        // console.log(req.body.title);
-        // console.log(newDarsa);
-    }
-        // Rest of your code
-      } catch (error) {
-        console.error(error);
-        return res.status(500).json({ success: false, message: "Error uploading to Cloudinary" });
-      }
-      
     
-    
-        
-        // console.log(newDarsa);
-        // console.log(req.body);
+        try {
+            const Darsa = await Darsas.create(newDarsa);
+            res.status(200).json({
+                success : true,
+                message : 'new darsa added',
+                Darsa,
+            })
+        } catch (error) {
+            
+            
+            res.status(500).json({
+                success : false,
+                message : "All fields must be requird",
+                
+            })
+            console.log(req.body.title);
+            console.log(newDarsa);
+        }
+        console.log(newDarsa);
+        console.log(req.body);
     }
 
 
